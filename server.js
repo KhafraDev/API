@@ -81,7 +81,7 @@ const countryInfo = async () => {
   // minus totalColumns to skip last row, which is total
   for (let i = 0; i < countriesTableCells.length - totalColumns; i += 1) {
     const cell = countriesTableCells[i];
-    const data = cell.children[0].data || '';
+
     // get country
     if (i % totalColumns === countryColIndex) {
       let country =
@@ -100,27 +100,51 @@ const countryInfo = async () => {
     }
     // get cases
     if (i % totalColumns === casesColIndex) {
-      result.pop().cases = parseInt(data.trim().replace(/,/g, '') || '0', 10);
+      let cases = cell.children[0].data || '';
+      result[result.length - 1].cases = parseInt(
+        cases.trim().replace(/,/g, '') || '0',
+        10
+      );
     }
     // get today cases
     if (i % totalColumns === todayCasesColIndex) {
-      result.pop().todayCases = parseInt(data.trim().replace(/,/g, '') || '0', 10);
+      let cases = cell.children[0].data || '';
+      result[result.length - 1].todayCases = parseInt(
+        cases.trim().replace(/,/g, '') || '0',
+        10
+      );
     }
     // get deaths
     if (i % totalColumns === deathsColIndex) {
-      result.pop().deaths = parseInt(data.trim().replace(/,/g, '') || '0', 10);
+      let deaths = cell.children[0].data || '';
+      result[result.length - 1].deaths = parseInt(
+        deaths.trim().replace(/,/g, '') || '0',
+        10
+      );
     }
     // get today deaths
     if (i % totalColumns === todayDeathsColIndex) {
-      result.pop().todayDeaths = parseInt(data.trim().replace(/,/g, '') || '0', 10);
+      let deaths = cell.children[0].data || '';
+      result[result.length - 1].todayDeaths = parseInt(
+        deaths.trim().replace(/,/g, '') || '0',
+        10
+      );
     }
     // get cured
     if (i % totalColumns === curedColIndex) {
-      result.pop().recovered = parseInt(data.trim().replace(/,/g, '') || 0, 10);
+      let cured = cell.children[0].data || 0;
+      result[result.length - 1].recovered = parseInt(
+        cured.trim().replace(/,/g, '') || 0,
+        10
+      );
     }
     // get critical
     if (i % totalColumns === criticalColIndex) {
-      result.pop().critical = parseInt(data.trim().replace(/,/g, '') || '0', 10);
+      let critical = cell.children[0].data || '';
+      result[result.length - 1].critical = parseInt(
+        critical.trim().replace(/,/g, '') || '0',
+        10
+      );
     }
   }
 
@@ -131,11 +155,11 @@ const countryInfo = async () => {
 setInterval(globalInfo, 60000);
 setInterval(countryInfo, 60000);
 
-app.get('/', (_, res) => response.send(`${res.cases} cases are reported of the COVID-19 Novel Coronavirus strain<br> ${res.deaths} have died from it <br>\n${res.recovered} have recovered from it <br> Get the endpoint /all to get information for all cases <br> get the endpoint /countries for getting the data sorted country wise`));
+app.get('/', (_, res) => res.send(`${res.cases} cases are reported of the COVID-19 Novel Coronavirus strain<br> ${res.deaths} have died from it <br>\n${res.recovered} have recovered from it <br> Get the endpoint /all to get information for all cases <br> get the endpoint /countries for getting the data sorted country wise`));
 app.get('/all/', (_, res) => res.send({ cases: results.cases, deaths: results.deaths, recovered: results.recovered }));
 app.get('/invite/', (_, res) => res.status(302).redirect('https://discordapp.com/oauth2/authorize?client_id=685268214435020809&scope=bot&permissions=52224'))
 app.get('/countries/', (_, res) => res.send(results.countries));
-app.listen(process.env.PORT, () => console.log('Your app is listening on port ' + process.env.PORT));
+app.listen(process.env.PORT || 4444, () => console.log('Your app is listening on port ' + (process.env.PORT || 4444)));
 
 // run on start-up, instead of waiting 60 seconds.
 setTimeout(() => Promise.all([globalInfo(), countryInfo()]), 10);

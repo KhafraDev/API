@@ -1,10 +1,10 @@
 {
   "name": "NovelCOVID-API",
-  "version": "1.0.2-khafra",
+  "version": "1.0.3-khafra",
   "description": "A simple Node API for getting coronavirus cases from scraped information.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server"
   },
   "dependencies": {
     "cheerio": "^0.22.0",
